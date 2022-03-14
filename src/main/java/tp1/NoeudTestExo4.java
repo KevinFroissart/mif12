@@ -11,21 +11,21 @@ import io.jbotsim.core.Node;
 public class NoeudTestExo4 extends Node {
 
 	private static TreeSet<Node> arbre;
-	private static int nbBCAST;
 	private static int nbReponse;
 
 	private boolean receivedJoin;
 	private boolean isRacine;
 	private Node pere;
 	private HashMap<Node, Boolean> enfantsMap;
+	private HashMap<Node, Boolean> enfantsEcho;
 
 	public void onStart() {
 		arbre = new TreeSet<>();
 		enfantsMap = new HashMap<>();
+		enfantsEcho = new HashMap<>();
 		receivedJoin = false;
 		isRacine = false;
 		nbReponse = 0;
-		nbBCAST = 0;
 	}
 
 	public void onMessage(Message m) {
@@ -40,6 +40,8 @@ public class NoeudTestExo4 extends Node {
 				nbReponse++;
 				send(pere, new Message("BACK"));
 				setColor(Color.GREEN);
+
+				send(pere, new Message("ECHO"));
 			}
 			else {
 				getNeighbors()
@@ -49,6 +51,7 @@ public class NoeudTestExo4 extends Node {
 							nbReponse++;
 							send(x, m);
 							enfantsMap.put(x, false);
+							enfantsEcho.put(x, false);
 						});
 			}
 		}
@@ -64,21 +67,20 @@ public class NoeudTestExo4 extends Node {
 					nbReponse++;
 					send(pere, new Message("BACK"));
 				}
-				else {
-					setColor(Color.RED);
-					sendAll(new Message("BCAST"));
-				}
 			}
 		}
-		else if (m.getContent().equals("BCAST")) {
-			setColor(Color.RED);
-			enfantsMap.keySet().forEach(e -> send(e, m));
-			nbBCAST ++;
-		}
 
-		if(nbBCAST == getTopology().getNodes().size() - 1) {
-			System.out.println("BCAST : " + nbBCAST);
-			System.out.println("Messages envoyés : " + nbReponse);
+		else if (m.getContent().equals("ECHO")) {
+			enfantsEcho.replace(m.getSender(), true);
+			if (enfantsEcho.values().stream().filter(v -> !v).collect(Collectors.toList()).isEmpty()) {
+				if (!isRacine) {
+					send(pere, m);
+				}
+				else {
+					setColor(Color.BLUE);
+					System.out.println("Total message : " + nbReponse);
+				}
+			}
 		}
 	}
 
@@ -87,6 +89,7 @@ public class NoeudTestExo4 extends Node {
 		arbre.add(this);
 		setColor(Color.YELLOW);
 		getNeighbors().forEach(e -> enfantsMap.put(e, false));
+		enfantsEcho = enfantsMap;
 		sendAll(new Message("JOIN"));
 		nbReponse += getNeighbors().size();
 	}
