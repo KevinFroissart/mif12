@@ -4,7 +4,7 @@ import io.jbotsim.core.Color;
 import io.jbotsim.core.Message;
 import io.jbotsim.core.Node;
 
-public class NoeudTest extends Node {
+public class NoeudTestExo3 extends Node {
 	private static int compte;
 	private static int nbReceived;
 	private boolean received;
