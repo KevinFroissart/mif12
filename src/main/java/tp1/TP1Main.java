@@ -6,8 +6,8 @@ import io.jbotsim.ui.JViewer;
 public class TP1Main {
 	public static void main(String[] args){ // On déclare le programme principal
 		Topology tp = new Topology(); // Création d’un nouveau système distribué
-		tp.setDefaultNodeModel(NoeudTest.class);
-		tp.setTimeUnit(1500);
+		tp.setDefaultNodeModel(NoeudTestExo4.class);
+		tp.setTimeUnit(500);
 		new JViewer(tp); // On active l’interface graphique de JBotSim
 		tp.start(); // On démarre le tout
 	}
