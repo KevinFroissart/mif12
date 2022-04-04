@@ -1,13 +1,12 @@
 package tp2;
 
+import io.jbotsim.core.Color;
 import io.jbotsim.core.Link;
 import io.jbotsim.core.Node;
 import io.jbotsim.core.Topology;
 import io.jbotsim.ui.JViewer;
-import tp1.NoeudTestExo4;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,20 +29,21 @@ public class TP2Main {
 
     public static void main(String[] args) {
         Topology tp = new Topology();
+        tp.disableWireless();
 
         /**
          * Question 1
          */
-        Node noeud0 = new NoeudTestExo4();
-        Node noeud1 = new NoeudTestExo4();
-        Node noeud2 = new NoeudTestExo4();
-        Node noeud3 = new NoeudTestExo4();
-        Node noeud4 = new NoeudTestExo4();
-        Node noeud5 = new NoeudTestExo4();
-        Node noeud6 = new NoeudTestExo4();
-        Node noeud7 = new NoeudTestExo4();
-        Node noeud8 = new NoeudTestExo4();
-        Node noeud9 = new NoeudTestExo4();
+        Node noeud0 = new ItaiRodeh();
+        Node noeud1 = new ItaiRodeh();
+        Node noeud2 = new ItaiRodeh();
+        Node noeud3 = new ItaiRodeh();
+        Node noeud4 = new ItaiRodeh();
+        Node noeud5 = new ItaiRodeh();
+        Node noeud6 = new ItaiRodeh();
+        Node noeud7 = new ItaiRodeh();
+        Node noeud8 = new ItaiRodeh();
+        Node noeud9 = new ItaiRodeh();
 
         /**
          * Question 4
@@ -101,8 +101,18 @@ public class TP2Main {
         noeud8.setID(ids.get(8));
         noeud9.setID(ids.get(9));
 
-        tp.setTimeUnit(500);
-        tp.disableWireless();
+        noeud0.setColor(Color.BLUE);
+        noeud1.setColor(Color.RED);
+        noeud2.setColor(Color.YELLOW);
+        noeud3.setColor(Color.WHITE);
+        noeud4.setColor(Color.GREEN);
+        noeud5.setColor(Color.GRAY);
+        noeud6.setColor(Color.BLACK);
+        noeud7.setColor(Color.ORANGE);
+        noeud8.setColor(Color.CYAN);
+        noeud9.setColor(Color.MAGENTA);
+
+        tp.setTimeUnit(200);
         new JViewer(tp);
         tp.start();
     }
