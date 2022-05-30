@@ -9,10 +9,11 @@ import java.util.Set;
 
 public class Noeud extends Node {
 
-    private boolean alive;
-    private Set<Node> trusted;
+    protected boolean alive;
+    protected Set<Node> trusted;
     private Set<Node> answered;
     private int tick;
+    private static boolean debug = true;
 
     @Override
     public void onStart() {
@@ -30,14 +31,17 @@ public class Noeud extends Node {
 
     @Override
     public void onMessage(Message message) {
-        System.out.println(this.getID() + " received \"" + message.getContent() + "\" from " + message.getSender().getID());
-        if (!alive) return;
+        if (debug) System.out.println(this.getID() + " received \"" + message.getContent() + "\" from " + message.getSender().getID());
+        if (!alive){
+            this.setLabel("Dead");
+            return;
+        }
         if (message.getContent().equals("Ping")) {
-            System.out.println(this.getID() + " sending Pong to " + message.getSender());
+            if (debug) System.out.println(this.getID() + " sending Pong to " + message.getSender());
             send(message.getSender(), new Message("Pong"));
         }
         if (message.getContent().equals("Pong")) {
-            System.out.println(this.getID() + " adding " + message.getSender() + " to the answered set");
+            if (debug) System.out.println(this.getID() + " adding " + message.getSender() + " to the answered set");
             answered.add(message.getSender());
         }
     }
@@ -46,17 +50,14 @@ public class Noeud extends Node {
     public void onClock() {
         if (!alive) return;
         tick = (tick + 1) % 20;
-        //System.out.println(tick);
         if (tick == 9 || tick == 19) {
-            System.out.println("Node " + this.getID() + " sendAll Ping");
-            if(this.getID() == 0 ) sendAll(new Message("Ping"));
-            // Il faut trouver un moyen d'envoyer à TOUS les noeuds et pas juste les voisins
+            if (debug) System.out.println("Node " + this.getID() + " sendAll Ping");
+            sendAll(new Message("Ping"));
         }
         if (tick == 19) {
-            trusted = answered;
+            trusted = new HashSet<>(answered);
             answered.clear();
-            System.out.println(trusted.stream().map(e -> e.getID() + ",").reduce("", String::concat));
-            this.setLabel(trusted.stream().map(e -> e.getID() + ",").reduce("", String::concat));
+            this.setLabel(trusted.stream().sorted().map(e -> e.getID() + ",").reduce("", String::concat));
         }
     }
 
